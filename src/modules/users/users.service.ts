@@ -56,4 +56,16 @@ export class UsersService {
       where: { id },
     });
   }
+
+  async deleteUser(id: number, user: User) {
+    const userExist = await this.findUserById(id);
+
+    if (userExist.id !== user.id)
+      throw new HttpException(
+        `You cannot delete another user's account.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return await this.prisma.user.delete({ where: { id } });
+  }
 }
