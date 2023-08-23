@@ -20,4 +20,8 @@ export class UsersService {
       password: undefined,
     };
   }
+
+  findByEmail(email: string) {
+    return this.prisma.user.findFirst({ where: { email } });
+  }
 }
