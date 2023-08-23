@@ -25,4 +25,31 @@ export class PostsService {
     if (!post) throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     return post;
   }
+
+  async update(id: number, data: CreatePostDto, user: User) {
+    const postExist = await this.findPostById(id);
+
+    if (postExist.userId !== user.id)
+      throw new HttpException(
+        `You cannot change another user's post.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return await this.prisma.post.update({
+      data,
+      where: { id },
+    });
+  }
+
+  async deletePost(id: number, user: User) {
+    const postExist = await this.findPostById(id);
+
+    if (postExist.userId !== user.id)
+      throw new HttpException(
+        `You cannot delete another user's post.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return await this.prisma.post.delete({ where: { id } });
+  }
 }

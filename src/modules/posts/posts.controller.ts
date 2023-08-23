@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -31,5 +33,19 @@ export class PostsController {
   @Get(':id')
   findPost(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.findPostById(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() data: CreatePostDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.postsService.update(id, data, user);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.postsService.deletePost(id, user);
   }
 }
