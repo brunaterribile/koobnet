@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -38,5 +40,20 @@ export class UsersService {
     const user = await this.prisma.user.findFirst({ where: { id } });
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     return user;
+  }
+
+  async update(id: number, data: UpdateUserDto, user: User) {
+    const userExist = await this.findUserById(id);
+
+    if (userExist.id !== user.id)
+      throw new HttpException(
+        `You cannot change another user's data.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return await this.prisma.user.update({
+      data,
+      where: { id },
+    });
   }
 }
