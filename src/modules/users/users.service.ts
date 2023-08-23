@@ -29,4 +29,14 @@ export class UsersService {
   findByEmail(email: string) {
     return this.prisma.user.findFirst({ where: { email } });
   }
+
+  async findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  async findUserById(id: number) {
+    const user = await this.prisma.user.findFirst({ where: { id } });
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return user;
+  }
 }
