@@ -2,8 +2,8 @@
   "name": "koobnet",
   "version": "0.0.1",
   "engines": {
-    "node": "16.13.2",
-    "npm": "8.1.2"
+    "node": "16.20.2",
+    "npm": "8.19.4"
   },
   "description": "",
   "author": "",
